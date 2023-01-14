@@ -1,0 +1,233 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Cinemas</title><br>
+		<! Import Ajax Jquery library>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+       
+	    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<!<link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <h1>Cinemas Requiring Delivery</h1><br>
+        
+        <div>
+		<! Create table to contain the 3 cinemas listed and contained in the cinemas table >
+            <table class="table" id="itemsListed">
+                <tr>
+                        <th>id</th>
+                        <th>Cinema Name</th>
+                        <th>
+                            Location
+                        </th>
+						<th>Number of Screens</th>
+                        <th>Go to Delivery Page</th>
+                </tr>  
+            </table>
+
+        </div>
+
+		
+    </body>
+    <script>
+	// Function to viewAll cinemas contained in the cinemas list
+	function viewAll(){
+        document.getElementById('displayCreateButton').style.display="block"
+        document.getElementById('itemsListed').style.display="block"
+        document.getElementById('createUpdateForm').style.display="none"
+    }
+	// getall function for the cinemas list
+	function getAllAjax(){
+		host = window.location.origin
+        $.ajax({
+            "url": host+"/cinemas",
+            "method":"GET",
+            "data":"",
+            "dataType": "JSON",
+            "success":function(result){
+                //console.log(result);
+                for (Product of result){
+                    addProductToTable(Product);
+                }
+                
+            },
+            "error":function(xhr,status,error){
+                console.log("error: "+status+" msg:"+error);
+            }
+        });
+	}
+	
+    function showCreate(){
+        document.getElementById('displayCreateButton').style.display="none"
+        document.getElementById('itemsListed').style.display="none"
+        document.getElementById('createUpdateForm').style.display="block"
+
+        document.getElementById('createLabel').style.display="inline"
+        document.getElementById('updateLabel').style.display="none"
+
+        document.getElementById('doCreateButton').style.display="block"
+        document.getElementById('doUpdateButton').style.display="none"
+    }
+	
+	function doCreate(){
+	// Get elements from create form
+        var form = document.getElementById('createUpdateForm')
+	// Assign inputs to dict and extract values using querySelector()
+        var Product = {}
+        Product.Cinema_Name = form.querySelector('input[name="Cinema_Name"]').value
+        Product.Location = form.querySelector('input[name="Location"]').value
+		Product.NumberOfScreens = form.querySelector('input[name="NumberOfScreens"]').value
+  //      Product.Member_Status = form.querySelector('input[name="Member_Status"]').value
+		// Print JSON to console and pass to AJAX call
+        console.log(JSON.stringify(Product))
+        createProductAjax(Product)
+    }
+	
+	function createProductAjax(Product){
+        console.log(JSON.stringify(Product));
+		// Ajax cod for create (POST), set type to JSON
+		host = window.location.origin
+        $.ajax({
+            "url": host+"/cinemas",
+            "method":"POST",
+            "data":JSON.stringify(Product),
+            "dataType": "JSON",
+            contentType: "application/json; charset=utf-8",
+			// If successful, pass JSON element to 'addProductToTable()
+            "success":function(result){
+                //console.log(result);
+                Product.id = result.id
+                addProductToTable(Product)
+				// Clear the form and call viewAll to return to home
+                clearForm() //HERE
+                viewAll() // HERE
+            },
+			// Create a function when unsuccessful - create error message
+            "error":function(xhr,status,error){
+                console.log("error: "+status+" msg:"+error);
+            }
+        });
+    }
+	
+	//function redirectToDelivery(Product){
+	//	//var Product = getProductFromForm();
+//  //      var rowElement = document.getElementById(Product.id);
+	//	if (Product.Cinema_Name = "IMC Oranmore"){
+	//		window.location.href='web_cinemas.html';
+	//		}
+	//	else if (Product.Cinema_Name = "The Eye Cinema"){
+	//		window.location.href='web_deliveries.html';
+	//		}
+	//	else if (Product.Cinema_Name = "IMC Headford Road"){
+	//		window.location.href='web_cinemas2-Copy.html';
+	//		}
+	//}
+	
+	// Redirect functions used to redirect the user to one of the three delivery pages, based on their selection
+		function redirectHeadford(){
+			window.location.href='Delivery_IMC_Headford_Road.html';
+			}
+			
+		function redirectOranmore(){
+			window.location.href='Delivery_IMC_Oranmore.html';
+			}
+			
+		function redirectEyeCinema(){
+			window.location.href='Delivery_Eye_Cinema.html';
+			}
+	
+	// Create function to add inputs to main table
+    function addProductToTable(Product){
+	// Create variable for each input from create/update forms 
+        var tableElement = document.getElementById('itemsListed')
+        var rowElement = tableElement.insertRow(-1)
+        rowElement.setAttribute('id',Product.id)
+		// Insert the id value from input
+        var cell1 = rowElement.insertCell(0);
+        cell1.innerHTML = Product.id
+		// Cinema_Name
+        var cell2 = rowElement.insertCell(1);
+        cell2.innerHTML = Product.Cinema_Name
+		// Type
+        var cell3 = rowElement.insertCell(2);
+        cell3.innerHTML = Product.Location
+		// Quantity
+		var cell4 = rowElement.insertCell(3);
+        cell4.innerHTML = Product.NumberOfScreens
+		// Member_Status
+ 
+		// Pass in buttons to update and delete 
+        var cell6 = rowElement.insertCell(4);
+		//cell6.innerHTML = '<button onclick="redirectToDelivery(Product)">S Cinema Delivery</button>'
+		if (Product.Cinema_Name == "IMC Headford Road"){
+			//window.location.href='web_deliveries.html';
+			cell6.innerHTML = '<button onclick="redirectHeadford()">Headford Road Cinema Delivery</button>'
+			}
+		else if (Product.Cinema_Name == "IMC Oranmore"){
+			//window.location.href='web_cinemas.html';
+			cell6.innerHTML = '<button onclick="redirectOranmore()">Oranmore Cinema Delivery</button>'
+			}
+		else if (Product.Cinema_Name == "The Eye Cinema"){
+			//window.location.href='web_cinemas2-Copy.html';
+			cell6.innerHTML = '<button onclick="redirectEyeCinema()">Eye Cinema Delivery</button>'
+			}
+
+       // cell6.innerHTML = '<button onclick="redirectToDelivery()">Selec Cinema Delivery</button>'
+   
+    }
+
+    function clearForm(){
+        var form = document.getElementById('createUpdateForm')
+
+        form.querySelector('input[name="Cinema_Name"]').value=''
+        form.querySelector('input[name="Location"]').value=''
+		form.querySelector('input[name="NumberOfScreens"]').value=''
+  //      form.querySelector('input[name="Member_Status"]').value=''
+    }
+	
+    function getProductFromRow(rowElement){
+        //HERE: var car ={}
+		var Product ={}
+        Product.id  = rowElement.getAttribute('id')
+        Product.Cinema_Name = rowElement.cells[1].firstChild.textContent
+        Product.Location = rowElement.cells[2].firstChild.textContent
+		Product.NumberOfScreens = parseInt(rowElement.cells[3].firstChild.textContent,10)
+  //      Product.Member_Status = parseInt(rowElement.cells[4].firstChild.textContent,10)
+        return Product
+    }
+	
+    function setProductInRow(rowElement, Product){
+        rowElement.cells[0].firstChild.textContent= Product.id  
+        rowElement.cells[1].firstChild.textContent= Product.Cinema_Name 
+        rowElement.cells[2].firstChild.textContent= Product.Location
+		rowElement.cells[3].firstChild.textContent= Product.NumberOfScreens
+     //   rowElement.cells[4].firstChild.textContent= Product.Member_Status
+    }
+	
+    function populateFormWithProduct(Product){
+        var form = document.getElementById('createUpdateForm')
+        form.querySelector('input[name="id"]').disabled = true
+        form.querySelector('input[name="id"]').value  = Product.id
+        form.querySelector('input[name="Cinema_Name"]').value= Product.Cinema_Name
+        form.querySelector('input[name="Location"]').value= Product.Location
+		form.querySelector('input[name="NumberOfScreens"]').value= Product.NumberOfScreens
+   //     form.querySelector('input[name="Member_Status"]').value= Product.Member_Status
+        return Product
+    }
+	
+    function getProductFromForm(){
+        var form = document.getElementById('createUpdateForm')
+        var Product = {}
+        Product.id = form.querySelector('input[name="id"]').value
+        Product.Cinema_Name = form.querySelector('input[name="Cinema_Name"]').value
+        Product.Location = form.querySelector('input[name="Location"]').value
+		Product.NumberOfScreens = parseInt(form.querySelector('input[name="NumberOfScreens"]').value,10)
+  //      Product.Member_Status = parseInt(form.querySelector('input[name="Member_Status"]').value,10)
+        console.log(JSON.stringify(Product))
+        return Product
+    }
+    
+    getAllAjax();
+     
+    </script>
+</html>
