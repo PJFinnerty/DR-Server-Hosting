@@ -23,7 +23,7 @@ class CinemasDAO:
         host=cfg2.mysql['host'],
         user=cfg2.mysql['user'],
         password=cfg2.mysql['password'],
-        database=cfg2.mysql['CinemaDelivery']
+        database=cfg2.mysql['database']
         )
   # Create findAllCinemas Functions, with SQL command and execute
     def findAllCinemas(self):

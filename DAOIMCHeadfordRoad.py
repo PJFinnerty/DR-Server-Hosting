@@ -35,7 +35,7 @@ class DeliveryDAOHeadfordRoad:
         host=cfg2.mysql['host'],
         user=cfg2.mysql['user'],
         password=cfg2.mysql['password'],
-        database=cfg2.mysql['CinemaDelivery']
+        database=cfg2.mysql['database']
         )
   
     def findAllHeadford(self):
