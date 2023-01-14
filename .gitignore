@@ -111,7 +111,8 @@ env.bak/
 venv.bak/
 
 # Config files
-
+dbconfig
+dbconfigCinemas
 
 # Spyder project settings
 .spyderproject

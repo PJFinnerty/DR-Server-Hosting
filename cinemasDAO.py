@@ -9,7 +9,7 @@ class CinemasDAO:
     def createDatabase(self):
         self.db = mysql.connector.connect(
             host=cfg2.mysql['host'],
-            user=cfg2.mysql['root'],
+            user=cfg2.mysql['user'],
             password=cfg2.mysql['password']    
         )
         self.cursor = self.connection.cursor()
@@ -21,7 +21,7 @@ class CinemasDAO:
     def __init__(self): 
         self.db = mysql.connector.connect(
         host=cfg2.mysql['host'],
-        user=cfg2.mysql['root'],
+        user=cfg2.mysql['user'],
         password=cfg2.mysql['password'],
         database=cfg2.mysql['CinemaDelivery']
         )
