@@ -33,9 +33,9 @@ class DeliveryDAOOranmore:
     def __init__(self): 
         self.db = mysql.connector.connect(
         host=cfg2.mysql['host'],
-        user=cfg2.mysql['user'],
+        user=cfg2.mysql['root'],
         password=cfg2.mysql['password'],
-        database=cfg2.mysql['database']
+        database=cfg2.mysql['CinemaDelivery']
         )
   
     def findAllOranmore(self):
