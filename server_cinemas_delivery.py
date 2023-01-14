@@ -53,7 +53,7 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('home'))
  
-@app.route('/Cinemas_Homepage.html')
+@app.route('/data')
 def getToOrder():
     if not 'username' in session:
         abort(401)
